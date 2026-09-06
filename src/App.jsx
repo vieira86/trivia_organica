@@ -68,25 +68,23 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-green-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      <header className="bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20 dark:bg-slate-900/80 dark:border-slate-800">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Elementar
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-2">O quiz de Química: Geral, Inorgânica, Analítica, Físico-Química, Orgânica e Bioquímica — tudo em um tabuleiro!</p>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="text-right hidden sm:block">
-                <p className="text-xl font-semibold text-purple-600 dark:text-purple-400 animate-pulse">
-                  🧪 Transforme moléculas em conhecimento! ⚗️
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Onde a diversão encontra a ciência
+      <header className="sticky top-0 z-30 bg-white/70 backdrop-blur-md shadow-sm border-b border-white/30 dark:bg-slate-900/70 dark:border-slate-800">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex justify-between items-center gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-xl shadow-md shadow-purple-500/20 shrink-0">
+                ⚛️
+              </div>
+              <div>
+                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent leading-none">
+                  Elementar
+                </h1>
+                <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  O quiz de Química: todas as áreas em um só tabuleiro
                 </p>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
               <SoundToggle muted={muted} onToggle={handleToggleMuted} />
               <ThemeToggle theme={theme} onToggle={toggleTheme} />
             </div>

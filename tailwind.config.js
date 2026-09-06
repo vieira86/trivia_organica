@@ -20,7 +20,12 @@ export default {
         'piece-move': 'pieceMove 0.5s ease-in-out',
         'bounce-gentle': 'bounceGentle 2s infinite',
         'confetti-fall': 'confettiFall 3s linear forwards',
-        'modal-pop': 'modalPop 0.25s ease-out'
+        'modal-pop': 'modalPop 0.25s ease-out',
+        'blob': 'blobFloat 9s ease-in-out infinite',
+        'blob-delayed': 'blobFloat 9s ease-in-out infinite 3s',
+        'fade-in-up': 'fadeInUp 0.6s ease-out both',
+        'float-slow': 'floatSlow 5s ease-in-out infinite',
+        'spin-slow': 'spin 6s linear infinite'
       },
       keyframes: {
         modalPop: {
@@ -46,6 +51,19 @@ export default {
         confettiFall: {
           '0%': { transform: 'translateY(-10vh) rotate(0deg)', opacity: 1 },
           '100%': { transform: 'translateY(105vh) rotate(360deg)', opacity: 0.4 }
+        },
+        blobFloat: {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '33%': { transform: 'translate(20px, -25px) scale(1.08)' },
+          '66%': { transform: 'translate(-15px, 15px) scale(0.95)' }
+        },
+        fadeInUp: {
+          '0%': { transform: 'translateY(16px)', opacity: 0 },
+          '100%': { transform: 'translateY(0)', opacity: 1 }
+        },
+        floatSlow: {
+          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(-14px) rotate(3deg)' }
         }
       }
     },
