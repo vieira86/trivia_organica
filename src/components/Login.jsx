@@ -11,6 +11,9 @@ const STEPS = [
   { icon: '🏆', title: 'Vença', desc: 'Complete o tabuleiro primeiro' }
 ]
 
+// onStudyMode fica sem uso enquanto o botão do Modo Estudo estiver comentado na tela
+// inicial (ver mais abaixo). Prop mantida de propósito para reativar rapidamente.
+// eslint-disable-next-line no-unused-vars
 const Login = ({ onStartGame, onStudyMode, onPlayOnline, hasSavedGame, onResumeGame }) => {
   const [names, setNames] = useState(['', ''])
   const [errors, setErrors] = useState({})
@@ -225,12 +228,16 @@ const Login = ({ onStartGame, onStudyMode, onPlayOnline, hasSavedGame, onResumeG
             🌐 Jogar Online (cada um na sua casa)
           </button>
 
+          {/* Modo Estudo temporariamente escondido da tela inicial (Rafael pediu para tirar
+              por enquanto, sem apagar o código). Para reativar, é só remover este comentário. */}
+          {/*
           <button
             onClick={onStudyMode}
             className="w-full mt-3 bg-white/50 dark:bg-slate-800/50 border border-purple-200 dark:border-slate-700 text-purple-700 dark:text-purple-300 font-semibold py-3 px-6 rounded-lg hover:bg-purple-50 dark:hover:bg-slate-800 transition-all duration-200"
           >
             📚 Modo Estudo (revisar perguntas sem jogar)
           </button>
+          */}
 
           <div className="mt-8 p-4 bg-blue-50 dark:bg-slate-800/60 rounded-lg border border-blue-200 dark:border-slate-700">
             <h3 className="font-semibold text-blue-800 dark:text-blue-300 mb-2">Como Jogar:</h3>
