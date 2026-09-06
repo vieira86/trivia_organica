@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen dark:from-slate-900 dark:to-slate-950 transition-colors duration-300;
+  }
+}
+
+@layer components {
+  .glass-morphism {
+    @apply bg-white/20 backdrop-blur-md border border-white/30 shadow-xl dark:bg-slate-800/40 dark:border-slate-700/50;
+  }
+
+  .game-board {
+    @apply bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-2xl border-4 border-amber-200 dark:from-slate-800 dark:to-slate-900 dark:border-slate-700;
+  }
+
+  .player-piece {
+    @apply w-8 h-8 rounded-full shadow-lg transition-all duration-300 hover:scale-110;
+  }
+
+  .dice-button {
+    @apply w-16 h-16 bg-white rounded-xl shadow-lg border-2 border-gray-200 flex items-center justify-center text-2xl font-bold transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95 dark:bg-slate-800 dark:border-slate-600;
+  }
+
+  .confetti-piece {
+    @apply absolute top-0 w-2.5 h-2.5 rounded-sm animate-confetti-fall;
+  }
+}

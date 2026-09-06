@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Cada partida vive em rooms/{codigo}. Sem login: quem tem o codigo da
+    // sala pode ler e escrever - suficiente para um joguinho casual entre
+    // duas pessoas. Nada sensivel e' armazenado aqui.
+    match /rooms/{roomCode} {
+      allow read, write: if true;
+    }
+  }
+}
