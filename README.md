@@ -1,7 +1,7 @@
-# 🧪 Ludo da Química
+# 🧪 Elementar — O Quiz de Química
 
-Jogo de tabuleiro educativo em React: um Ludo onde cada casa pertence a uma
-área da Química — **Geral, Inorgânica, Analítica, Físico-Química, Orgânica e
+Jogo de tabuleiro educativo em React: uma corrida de tabuleiro onde cada casa
+pertence a uma área da Química — **Geral, Inorgânica, Analítica, Físico-Química, Orgânica e
 Bioquímica** — cada uma com sua cor. Jogue no mesmo aparelho (modo local) ou
 **online**, cada jogador na sua própria casa, com sincronização em tempo real
 via Firebase.

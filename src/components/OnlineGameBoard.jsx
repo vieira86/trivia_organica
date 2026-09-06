@@ -40,7 +40,7 @@ const OnlineGameBoard = ({ code, playerId, onExit }) => {
       if (document.hidden) {
         let flashOn = true
         titleFlashRef.current = setInterval(() => {
-          document.title = flashOn ? '🔴 Sua vez! — Ludo da Química' : originalTitleRef.current
+          document.title = flashOn ? '🔴 Sua vez! — Elementar' : originalTitleRef.current
           flashOn = !flashOn
         }, 1000)
         const stopFlash = () => {
@@ -52,7 +52,7 @@ const OnlineGameBoard = ({ code, playerId, onExit }) => {
 
         if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
           try {
-            new Notification('Ludo da Química', { body: 'É a sua vez de jogar!' })
+            new Notification('Elementar — O Quiz de Química', { body: 'É a sua vez de jogar!' })
           } catch { /* ambiente sem suporte a notificações — ignora */ }
         }
       }

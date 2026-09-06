@@ -73,9 +73,9 @@ function App() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Ludo da Química
+                Elementar
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-2">Geral, Inorgânica, Analítica, Físico-Química, Orgânica e Bioquímica — tudo em um tabuleiro!</p>
+              <p className="text-gray-600 dark:text-gray-400 mt-2">O quiz de Química: Geral, Inorgânica, Analítica, Físico-Química, Orgânica e Bioquímica — tudo em um tabuleiro!</p>
             </div>
 
             <div className="flex items-center gap-4">
@@ -141,7 +141,7 @@ function App() {
         <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
-                    <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Ludo da Química</h3>
+                    <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Elementar</h3>
                     <p className="text-gray-400">
                         Plataforma gamificada para aprendizado de Química, cobrindo todas as grandes áreas, tornando o estudo divertido e interativo.
                     </p>
@@ -185,7 +185,7 @@ function App() {
 
             <div className="border-t border-gray-800 mt-8 pt-8 text-center">
                 <p className="text-gray-400 text-sm">
-                    © 2026 Ludo da Química - Código aberto e gratuito para educação química.
+                    © 2026 Elementar — O Quiz de Química - Código aberto e gratuito para educação química.
                 </p>
             </div>
         </div>
