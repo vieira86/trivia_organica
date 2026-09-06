@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import Board from './Board'
 import Dice from './Dice'
 import QuestionModal from './QuestionModal'
+import HazardModal from './HazardModal'
 import ScoreBoard from './ScoreBoard'
 import GameHistory from './GameHistory'
 import Confetti from './Confetti'
 import { BOARD_SIZE } from '../data/boardPath'
 import { subscribeRoom, startGame, rollForTurn, submitAnswer, getQuestionById } from '../online/roomClient'
+import { getHazard } from '../data/hazards'
 import { playWin, playYourTurn } from '../utils/sound'
 
 const OnlineGameBoard = ({ code, playerId, onExit }) => {
@@ -16,6 +18,8 @@ const OnlineGameBoard = ({ code, playerId, onExit }) => {
   const [notifPermission, setNotifPermission] = useState(
     typeof Notification !== 'undefined' ? Notification.permission : 'unsupported'
   )
+  const [hazardToast, setHazardToast] = useState(null)
+  const [seenHazardAt, setSeenHazardAt] = useState(null)
   const wasMyTurnRef = useRef(false)
   const titleFlashRef = useRef(null)
   const originalTitleRef = useRef(document.title)
@@ -65,6 +69,16 @@ const OnlineGameBoard = ({ code, playerId, onExit }) => {
       playWin()
     }
   }, [room?.status, room?.winnerId, playerId])
+
+  // Mostra um aviso rápido (para os dois jogadores) quando alguém cai numa casa-armadilha.
+  // Atualizado durante a renderização (padrão do React para "ajustar estado quando uma
+  // prop muda"), em vez de num efeito, para não disparar um render em cascata.
+  const hazardEvent = room?.lastEvent?.type === 'hazard' ? room.lastEvent : null
+  if (hazardEvent && hazardEvent.at !== seenHazardAt) {
+    setSeenHazardAt(hazardEvent.at)
+    const hazard = getHazard(hazardEvent.hazardId)
+    if (hazard) setHazardToast({ hazard, playerName: hazardEvent.playerName })
+  }
 
   const handleEnableNotifications = async () => {
     if (typeof Notification === 'undefined') return
@@ -224,7 +238,7 @@ const OnlineGameBoard = ({ code, playerId, onExit }) => {
             </div>
           </div>
 
-          <Board players={room.players} currentPlayer={room.currentPlayerIndex} />
+          <Board players={room.players} currentPlayer={room.currentPlayerIndex} hazards={room.hazards || {}} />
 
           <div className="flex justify-center mt-6">
             <Dice
@@ -257,6 +271,17 @@ const OnlineGameBoard = ({ code, playerId, onExit }) => {
           waitingLabel={`Aguardando ${currentPlayer.name} responder...`}
           onClose={() => handleAnswer(false)}
           onAnswer={handleAnswer}
+        />
+      )}
+
+      {hazardToast && (
+        <HazardModal
+          hazard={{
+            ...hazardToast.hazard,
+            message: `${hazardToast.playerName}: ${hazardToast.hazard.message}`
+          }}
+          autoCloseMs={3500}
+          onConfirm={() => setHazardToast(null)}
         />
       )}
     </div>

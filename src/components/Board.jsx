@@ -1,5 +1,6 @@
 import { BOARD_PATH, BOARD_SIZE } from '../data/boardPath'
 import { AREAS, getArea } from '../data/questions'
+import { getHazard } from '../data/hazards'
 
 // Mistura a cor da area com branco/preto para gerar um tom de fundo suave e legivel
 function tintColor(hex, amount, mode = 'light') {
@@ -14,7 +15,7 @@ function tintColor(hex, amount, mode = 'light') {
   return `rgb(${nr}, ${ng}, ${nb})`
 }
 
-const Board = ({ players, currentPlayer }) => {
+const Board = ({ players, currentPlayer, hazards = {} }) => {
   const getPlayersInCell = (cellId) => {
     return players.filter(player => {
       if (cellId === 'start') return player.position === 0
@@ -56,17 +57,27 @@ const Board = ({ players, currentPlayer }) => {
 
             const playersInCell = getPlayersInCell(cell.id)
             const area = cell.area ? getArea(cell.area) : null
+            const hazard = typeof cell.id === 'number' ? getHazard(hazards[cell.id]) : null
 
             return (
               <div
                 key={cell.id}
                 className="rounded-lg border-2 flex items-center justify-center relative p-1 shadow-sm transition-all duration-200 hover:scale-105"
                 style={{ aspectRatio: '1/1', ...getCellStyle(cell) }}
-                title={area ? area.label : cell.number}
+                title={hazard ? hazard.label : area ? area.label : cell.number}
               >
                 <span className="font-bold text-sm text-gray-800/80 dark:text-gray-900/70">
                   {cell.number}
                 </span>
+
+                {hazard && (
+                  <div
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full border-2 border-white shadow flex items-center justify-center text-[10px] leading-none"
+                    style={{ backgroundColor: hazard.color }}
+                  >
+                    {hazard.icon}
+                  </div>
+                )}
 
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   {playersInCell.map((player, index) => (
@@ -106,6 +117,20 @@ const Board = ({ players, currentPlayer }) => {
             <span className="text-gray-600 dark:text-gray-400">{area.label}</span>
           </div>
         ))}
+      </div>
+
+      <div className="flex justify-center mt-2 gap-3 text-xs flex-wrap">
+        <span className="text-gray-400 dark:text-gray-500">Casas-armadilha (mudam a cada partida):</span>
+        {Object.values(hazards).length > 0 && [...new Set(Object.values(hazards))].map(hazardId => {
+          const hazard = getHazard(hazardId)
+          if (!hazard) return null
+          return (
+            <div key={hazardId} className="flex items-center gap-1.5">
+              <span>{hazard.icon}</span>
+              <span className="text-gray-600 dark:text-gray-400">{hazard.label}</span>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

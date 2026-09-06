@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resolveMove, updatePlayer, POINTS_PER_HOUSE } from './gameLogic'
+import { resolveMove, updatePlayer, applyHazardEffect, POINTS_PER_HOUSE } from './gameLogic'
 import { BOARD_SIZE } from '../data/boardPath'
 
 describe('resolveMove', () => {
@@ -43,5 +43,22 @@ describe('updatePlayer', () => {
   it('leaves finished untouched when not provided', () => {
     const result = updatePlayer(players, 0, { position: 5, scoreDelta: 10 })
     expect(result[0].finished).toBe(false)
+  })
+})
+
+describe('applyHazardEffect', () => {
+  it('moves back by the hazard amount for a "back" hazard', () => {
+    const hazard = { effect: 'back', amount: 3 }
+    expect(applyHazardEffect(20, hazard)).toBe(17)
+  })
+
+  it('never goes below zero for a "back" hazard', () => {
+    const hazard = { effect: 'back', amount: 5 }
+    expect(applyHazardEffect(2, hazard)).toBe(0)
+  })
+
+  it('sends the player back to the start for a "start" hazard', () => {
+    const hazard = { effect: 'start' }
+    expect(applyHazardEffect(30, hazard)).toBe(0)
   })
 })

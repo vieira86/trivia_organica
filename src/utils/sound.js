@@ -77,3 +77,8 @@ export function playYourTurn() {
   playTone({ frequency: 392.0, duration: 0.12, type: 'sine', volume: 0.16 })
   playTone({ frequency: 587.33, duration: 0.22, type: 'sine', delay: 0.13, volume: 0.16 })
 }
+
+export function playHazard() {
+  playTone({ frequency: 180, duration: 0.2, type: 'sawtooth', volume: 0.12 })
+  playTone({ frequency: 140, duration: 0.3, type: 'sawtooth', delay: 0.15, volume: 0.12 })
+}

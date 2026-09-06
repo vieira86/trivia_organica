@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 import Board from './Board'
 import Dice from './Dice'
 import QuestionModal from './QuestionModal'
+import HazardModal from './HazardModal'
 import ScoreBoard from './ScoreBoard'
 import GameHistory from './GameHistory'
 import Confetti from './Confetti'
 import { BOARD_SIZE, getCellArea } from '../data/boardPath'
 import { pickRandomQuestion, RECENT_QUESTIONS_WINDOW } from '../data/questions'
-import { resolveMove, rollDice, updatePlayer } from '../utils/gameLogic'
+import { generateHazardLayout, getHazard } from '../data/hazards'
+import { resolveMove, rollDice, updatePlayer, applyHazardEffect } from '../utils/gameLogic'
 import { saveGame, clearGame } from '../utils/storage'
 import { playDiceRoll, playWin } from '../utils/sound'
 
@@ -23,6 +25,9 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
   const [recentQuestionIds, setRecentQuestionIds] = useState(initialState?.recentQuestionIds ?? [])
   const [gameHistory, setGameHistory] = useState(initialState?.gameHistory ?? [])
   const [canRoll, setCanRoll] = useState(true)
+  // Casas-armadilha: sorteadas uma vez por partida (mantidas ao retomar um jogo salvo).
+  const [hazards] = useState(initialState?.hazards ?? (() => generateHazardLayout(BOARD_SIZE)))
+  const [activeHazard, setActiveHazard] = useState(null) // { hazard, landingCell }
 
   const addHistory = (player, action) => {
     setGameHistory(prev => [...prev, { player, action, timestamp: timestamp() }])
@@ -36,8 +41,8 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
       clearGame()
       return
     }
-    saveGame({ players, currentPlayer, gameHistory, recentQuestionIds })
-  }, [players, currentPlayer, gameHistory, recentQuestionIds, gameEnded])
+    saveGame({ players, currentPlayer, gameHistory, recentQuestionIds, hazards })
+  }, [players, currentPlayer, gameHistory, recentQuestionIds, hazards, gameEnded])
 
   const nextTurn = () => {
     setCurrentPlayer(prev => (prev + 1) % players.length)
@@ -58,8 +63,14 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
     addHistory(players[currentPlayer].name, `lançou o dado e tirou ${value}`)
     setIsRolling(false)
 
+    const landingCell = Math.min(players[currentPlayer].position + value, BOARD_SIZE)
+    const hazard = getHazard(hazards[landingCell])
+
     setTimeout(() => {
-      const landingCell = Math.min(players[currentPlayer].position + value, BOARD_SIZE)
+      if (hazard) {
+        setActiveHazard({ hazard, landingCell })
+        return
+      }
       const area = getCellArea(landingCell)
       const question = pickRandomQuestion(recentQuestionIds, area)
       setCurrentQuestion(question)
@@ -104,6 +115,19 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
 
     // Cada jogador joga uma vez por rodada: acertando ou errando, a vez passa adiante.
     finishQuestionRound()
+    nextTurn()
+  }
+
+  const handleHazardConfirm = () => {
+    const player = players[currentPlayer]
+    const { hazard, landingCell } = activeHazard
+    const finalPosition = applyHazardEffect(landingCell, hazard)
+
+    setPlayers(prev => updatePlayer(prev, currentPlayer, { position: finalPosition }))
+    addHistory(player.name, `caiu em ${hazard.label} e foi parar na casa ${finalPosition}`)
+
+    setActiveHazard(null)
+    setDiceValue(null)
     nextTurn()
   }
 
@@ -173,6 +197,7 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
           <Board
             players={players}
             currentPlayer={currentPlayer}
+            hazards={hazards}
           />
 
           <div className="flex justify-center mt-6">
@@ -181,7 +206,7 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
               isRolling={isRolling}
               onRoll={handleDiceRoll}
               canRoll={canRoll}
-              showQuestion={showQuestion}
+              showQuestion={showQuestion || Boolean(activeHazard)}
             />
           </div>
         </div>
@@ -198,6 +223,13 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
           question={currentQuestion}
           onClose={() => handleQuestionAnswer(false)}
           onAnswer={handleQuestionAnswer}
+        />
+      )}
+
+      {activeHazard && (
+        <HazardModal
+          hazard={activeHazard.hazard}
+          onConfirm={handleHazardConfirm}
         />
       )}
     </div>

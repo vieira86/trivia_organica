@@ -13,6 +13,11 @@ via Firebase.
 3. Acertando ou errando (ou se o tempo esgotar), a vez passa para o próximo jogador.
 4. O primeiro a completar as 50 casas vence.
 
+Algumas casas são **armadilhas** (ácido sulfúrico, ácido nítrico, contaminação
+radioativa) — caem em posições sorteadas a cada nova partida, mas ficam fixas
+durante aquele jogo. Quem cai numa delas sofre o efeito na hora (volta algumas
+casas, ou direto para o início), sem pergunta, e a vez já passa.
+
 No modo online, a cada jogada o outro jogador é avisado automaticamente que
 chegou a vez dele (a tela dele atualiza sozinha, com som e um aviso "Sua
 vez!" — inclusive uma notificação do navegador se ele estiver em outra aba).

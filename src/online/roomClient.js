@@ -3,8 +3,9 @@ import { db } from '../firebase'
 import { generateRoomCode, normalizeRoomCode } from './roomCode'
 import { getCellArea, BOARD_SIZE } from '../data/boardPath'
 import { pickRandomQuestion, RECENT_QUESTIONS_WINDOW, QUESTIONS } from '../data/questions'
-import { resolveMove, rollDice } from '../utils/gameLogic'
+import { resolveMove, rollDice, applyHazardEffect } from '../utils/gameLogic'
 import { PLAYER_COLORS } from '../data/playerColors'
+import { generateHazardLayout, getHazard } from '../data/hazards'
 
 const MAX_PLAYERS = 4
 const MAX_HISTORY = 20
@@ -51,6 +52,8 @@ export async function createRoom({ name }) {
     diceValue: null,
     question: null,
     recentQuestionIds: [],
+    // Sorteada uma vez, na criação da sala: fica fixa durante essa partida.
+    hazards: generateHazardLayout(BOARD_SIZE),
     history: appendHistory([], `${name} criou a sala`),
     winnerId: null,
     createdAt: Date.now(),
@@ -135,6 +138,27 @@ export async function rollForTurn(code, playerId) {
 
   const value = rollDice()
   const landing = Math.min(currentPlayer.position + value, BOARD_SIZE)
+  const hazard = getHazard((data.hazards || {})[landing])
+
+  if (hazard) {
+    // Casa-armadilha: resolve na hora, sem pergunta, e passa a vez.
+    const finalPosition = applyHazardEffect(landing, hazard)
+    const idx = data.currentPlayerIndex
+    const nextIndex = (idx + 1) % data.players.length
+    const newPlayers = data.players.map((p, i) => (i === idx ? { ...p, position: finalPosition } : p))
+
+    await updateDoc(ref, {
+      players: newPlayers,
+      diceValue: value,
+      question: null,
+      currentPlayerIndex: nextIndex,
+      history: appendHistory(data.history, `${currentPlayer.name} tirou ${value} e caiu em ${hazard.label} — foi parar na casa ${finalPosition}`),
+      lastEvent: { type: 'hazard', hazardId: hazard.id, playerName: currentPlayer.name, at: Date.now() },
+      updatedAt: Date.now()
+    })
+    return
+  }
+
   const area = getCellArea(landing)
   const question = pickRandomQuestion(data.recentQuestionIds || [], area)
 

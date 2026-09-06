@@ -20,6 +20,13 @@ export function rollDice() {
   return Math.floor(Math.random() * 6) + 1
 }
 
+/** Aplica o efeito de uma casa-armadilha (hazards.js) a partir da posição de pouso. */
+export function applyHazardEffect(landingPosition, hazard) {
+  if (hazard.effect === 'start') return 0
+  if (hazard.effect === 'back') return Math.max(0, landingPosition - hazard.amount)
+  return landingPosition
+}
+
 export function updatePlayer(players, index, { position, scoreDelta = 0, finished }) {
   return players.map((player, i) => {
     if (i !== index) return player
