@@ -4,8 +4,8 @@ export const POINTS_PER_HOUSE = 10
 
 /**
  * Calcula o resultado de mover um jogador `diceValue` casas a partir de `position`.
- * O jogo em cadeia (estilo Perguntados): a cada resposta certa, o jogador rola de
- * novo e continua andando ate errar uma pergunta - so entao a vez passa.
+ * Cada jogador tem uma jogada por rodada: rola o dado, responde a pergunta da
+ * area em que cai e, acertando ou errando, a vez passa para o proximo jogador.
  */
 export function resolveMove(position, diceValue) {
   const rawPosition = position + diceValue

@@ -1,8 +1,6 @@
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import Login from './components/Login'
 import GameBoard from './components/GameBoard'
-import OnlineLobby from './components/OnlineLobby'
-import OnlineGameBoard from './components/OnlineGameBoard'
 import StudyMode from './components/StudyMode'
 import ThemeToggle from './components/ThemeToggle'
 import SoundToggle from './components/SoundToggle'
@@ -10,6 +8,17 @@ import { useTheme } from './hooks/useTheme'
 import { loadGame, clearGame } from './utils/storage'
 import { isMuted, setMuted } from './utils/sound'
 import './index.css'
+
+// Carregados sob demanda: assim quem so joga localmente nao baixa o SDK do
+// Firebase, usado apenas no modo online.
+const OnlineLobby = lazy(() => import('./components/OnlineLobby'))
+const OnlineGameBoard = lazy(() => import('./components/OnlineGameBoard'))
+
+const OnlineLoading = () => (
+  <div className="text-center py-16 text-gray-500 dark:text-gray-400">
+    Carregando modo online...
+  </div>
+)
 
 function App() {
   // 'login', 'playing', 'study', 'online-lobby', 'online-playing'
@@ -109,18 +118,22 @@ function App() {
         )}
 
         {gameState === 'online-lobby' && (
-          <OnlineLobby
-            onReady={handleOnlineReady}
-            onBack={() => setGameState('login')}
-          />
+          <Suspense fallback={<OnlineLoading />}>
+            <OnlineLobby
+              onReady={handleOnlineReady}
+              onBack={() => setGameState('login')}
+            />
+          </Suspense>
         )}
 
         {gameState === 'online-playing' && onlineRoom && (
-          <OnlineGameBoard
-            code={onlineRoom.code}
-            playerId={onlineRoom.playerId}
-            onExit={handleExitOnline}
-          />
+          <Suspense fallback={<OnlineLoading />}>
+            <OnlineGameBoard
+              code={onlineRoom.code}
+              playerId={onlineRoom.playerId}
+              onExit={handleExitOnline}
+            />
+          </Suspense>
         )}
       </main>
 

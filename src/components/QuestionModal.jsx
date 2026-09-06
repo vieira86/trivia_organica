@@ -193,7 +193,7 @@ const QuestionModal = ({ question, onClose, onAnswer, readOnly = false, waitingL
             </button>
           ) : (
             <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-              {isCorrect ? 'Correto! Role o dado de novo e continue.' : 'Você errou — a vez passa para o próximo jogador.'}
+              {isCorrect ? 'Você acertou! A vez passa para o próximo jogador.' : 'Você errou — a vez passa para o próximo jogador.'}
             </div>
           )}
         </div>

@@ -10,13 +10,12 @@ via Firebase.
 
 1. Role o dado e ande o número de casas sorteado.
 2. Responda a pergunta da área em que você caiu (a cor da casa indica a área).
-3. **Acertou?** Role de novo e continue andando — estilo Perguntados/Trivia Crack.
-4. **Errou** (ou o tempo esgotou)? A vez passa para o próximo jogador.
-5. O primeiro a completar as 50 casas vence.
+3. Acertando ou errando (ou se o tempo esgotar), a vez passa para o próximo jogador.
+4. O primeiro a completar as 50 casas vence.
 
-No modo online, quando você erra, o outro jogador é avisado automaticamente
-(a tela dele atualiza sozinha, com som e um aviso "Sua vez!" — inclusive uma
-notificação do navegador se ele estiver em outra aba).
+No modo online, a cada jogada o outro jogador é avisado automaticamente que
+chegou a vez dele (a tela dele atualiza sozinha, com som e um aviso "Sua
+vez!" — inclusive uma notificação do navegador se ele estiver em outra aba).
 
 Use o **Modo Estudo** para revisar todas as perguntas, por área, sem pressão
 de tempo.

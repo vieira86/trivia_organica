@@ -151,8 +151,8 @@ export function getQuestionById(id) {
   return QUESTIONS.find(q => q.id === id) ?? null
 }
 
-/** O jogador da vez responde a pergunta sorteada. Acerto: avanca e continua a vez.
- *  Erro: a vez passa para o proximo jogador (o outro lado e' avisado via onSnapshot). */
+/** O jogador da vez responde a pergunta sorteada. Acertando ou errando, a vez
+ *  passa para o proximo jogador (o outro lado e' avisado automaticamente via onSnapshot). */
 export async function submitAnswer(code, playerId, correct) {
   const ref = roomRef(normalizeRoomCode(code))
   const snap = await getDoc(ref)
@@ -181,11 +181,15 @@ export async function submitAnswer(code, playerId, correct) {
     i === idx ? { ...p, position: result.position, score: p.score + result.points, finished: result.won } : p
   ))
 
+  // Cada jogador joga uma vez por rodada: acertando ou errando, a vez passa adiante.
+  const nextIndex = (idx + 1) % data.players.length
+
   const updates = {
     players: newPlayers,
     question: null,
     diceValue: null,
-    history: appendHistory(data.history, `${player.name} acertou e avançou para a casa ${result.position}`),
+    currentPlayerIndex: nextIndex,
+    history: appendHistory(data.history, `${player.name} acertou e avançou para a casa ${result.position} — vez de ${newPlayers[nextIndex].name}`),
     lastEvent: { type: 'correct', playerName: player.name, at: Date.now() },
     updatedAt: Date.now()
   }

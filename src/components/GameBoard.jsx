@@ -23,7 +23,6 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
   const [recentQuestionIds, setRecentQuestionIds] = useState(initialState?.recentQuestionIds ?? [])
   const [gameHistory, setGameHistory] = useState(initialState?.gameHistory ?? [])
   const [canRoll, setCanRoll] = useState(true)
-  const [streak, setStreak] = useState(0)
 
   const addHistory = (player, action) => {
     setGameHistory(prev => [...prev, { player, action, timestamp: timestamp() }])
@@ -43,7 +42,6 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
   const nextTurn = () => {
     setCurrentPlayer(prev => (prev + 1) % players.length)
     setCanRoll(true)
-    setStreak(0)
   }
 
   const handleDiceRoll = async () => {
@@ -95,7 +93,6 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
       finished: result.won
     }))
 
-    setStreak(s => s + 1)
     addHistory(player.name, `respondeu corretamente e moveu ${diceValue} casas (da ${oldPosition} para a ${result.position})`)
 
     if (result.won) {
@@ -105,9 +102,9 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
       return
     }
 
-    // Acertou: continua na vez do mesmo jogador (estilo Perguntados) - pode rolar de novo.
+    // Cada jogador joga uma vez por rodada: acertando ou errando, a vez passa adiante.
     finishQuestionRound()
-    setCanRoll(true)
+    nextTurn()
   }
 
   const handleExit = () => {
@@ -163,7 +160,6 @@ const GameBoard = ({ players: initialPlayers, initialState, onExit }) => {
                 Vez de: <span style={{ color: players[currentPlayer].color }}>
                   {players[currentPlayer].name}
                 </span>
-                {streak > 0 && <span className="ml-2 text-sm text-orange-500 font-bold">🔥 {streak}</span>}
               </div>
               <button
                 onClick={handleExit}

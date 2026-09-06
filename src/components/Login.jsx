@@ -156,8 +156,7 @@ const Login = ({ onStartGame, onStudyMode, onPlayOnline, hasSavedGame, onResumeG
             <li>• De 2 a 4 jogadores, no mesmo aparelho ou online</li>
             <li>• Cada casa é de uma área da Química (cor diferente)</li>
             <li>• Lance o dado e responda a pergunta da área em que caiu</li>
-            <li>• Acertou? Role de novo e continue andando!</li>
-            <li>• Errou (ou o tempo acabe)? A vez passa para o próximo</li>
+            <li>• Acertando ou errando, a vez passa para o próximo jogador</li>
             <li>• Primeiro a completar o tabuleiro vence!</li>
           </ul>
         </div>
